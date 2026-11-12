@@ -1,2 +1,0 @@
-# fomin-db-uralchem
-
