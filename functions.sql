@@ -8,7 +8,7 @@ CREATE FUNCTION `uralchem_db`.`waste_records_count`(
 )
 RETURNS INTEGER
 DETERMINISTIC
-READS SQL DATA
+READS SQL DATA 
 BEGIN
     DECLARE v_count INT;
 
@@ -45,7 +45,6 @@ BEGIN
     RETURN v_count;
 END%%
 
-
 DROP FUNCTION IF EXISTS `uralchem_db`.`certified_sites_count`%%
 
 CREATE FUNCTION `uralchem_db`.`certified_sites_count`(
@@ -65,8 +64,30 @@ BEGIN
     RETURN v_count;
 END%%
 
+DROP FUNCTION IF EXISTS `uralchem_db`.`water_intake_sum`%%
+
+CREATE FUNCTION `uralchem_db`.`water_intake_sum`(
+    p_year INT
+)
+RETURNS DECIMAL(15,2)
+DETERMINISTIC
+READS SQL DATA
+BEGIN
+    DECLARE v_sum DECIMAL(15,2);
+
+    SELECT SUM(water_intake)
+    INTO v_sum
+    FROM water_records
+    WHERE report_year = p_year;
+
+    RETURN v_sum;
+END%%
+
 DELIMITER ;
+
+SELECT `uralchem_db`.`water_intake_sum`(2025);
 
 SELECT `uralchem_db`.`water_records_count`(2025);
 
 SELECT `uralchem_db`.`certified_sites_count`(1);
+

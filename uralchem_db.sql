@@ -662,7 +662,7 @@ EXECUTE stmt USING @year;
 DEALLOCATE PREPARE stmt;
 
 USE uralchem_db;
-
+add_procedure_log
 DROP PROCEDURE IF EXISTS get_waste_statistics;
 
 CREATE PROCEDURE get_waste_statistics()
@@ -703,13 +703,11 @@ WHERE report_year = p_year;
 
 CALL get_water_statistics_by_year(2025);
 
-
 CREATE TABLE IF NOT EXISTS procedure_log (
     log_id INT AUTO_INCREMENT PRIMARY KEY,
     operation_name VARCHAR(150) NOT NULL,
     created_at DATETIME NOT NULL
 );
-
 
 DROP PROCEDURE IF EXISTS add_procedure_log;
 
@@ -721,3 +719,15 @@ CALL add_procedure_log('Environmental statistics calculation');
 
 SELECT *
 FROM procedure_log;
+
+CALL get_waste_statistics();
+
+CALL get_water_statistics_by_year(2025);
+
+TRUNCATE TABLE procedure_log;
+
+CALL add_procedure_log('Environmental statistics calculation');
+
+SELECT *
+FROM procedure_log;
+
