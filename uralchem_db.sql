@@ -660,3 +660,64 @@ PREPARE stmt FROM
 EXECUTE stmt USING @year;
 
 DEALLOCATE PREPARE stmt;
+
+USE uralchem_db;
+
+DROP PROCEDURE IF EXISTS get_waste_statistics;
+
+CREATE PROCEDURE get_waste_statistics()
+SELECT
+    AVG(generated_volume) AS average_waste,
+    SUM(generated_volume) AS total_waste,
+    MAX(generated_volume) AS maximum_waste,
+    MIN(generated_volume) AS minimum_waste
+FROM waste_records;
+
+CALL get_waste_statistics();
+
+DROP PROCEDURE IF EXISTS get_water_statistics_by_year;
+
+CREATE PROCEDURE get_water_statistics_by_year(IN p_year INT)
+SELECT
+    AVG(water_intake) AS average_water_intake,
+    SUM(water_intake) AS total_water_intake,
+    MAX(water_intake) AS maximum_water_intake,
+    MIN(water_intake) AS minimum_water_intake
+FROM water_records
+WHERE report_year = p_year;
+
+CALL get_water_statistics_by_year(2025);
+
+USE uralchem_db;
+
+DROP PROCEDURE IF EXISTS get_water_statistics_by_year;
+
+CREATE PROCEDURE get_water_statistics_by_year(IN p_year INT)
+SELECT
+    AVG(water_intake) AS average_water_intake,
+    SUM(water_intake) AS total_water_intake,
+    MAX(water_intake) AS maximum_water_intake,
+    MIN(water_intake) AS minimum_water_intake
+FROM water_records
+WHERE report_year = p_year;
+
+CALL get_water_statistics_by_year(2025);
+
+
+CREATE TABLE IF NOT EXISTS procedure_log (
+    log_id INT AUTO_INCREMENT PRIMARY KEY,
+    operation_name VARCHAR(150) NOT NULL,
+    created_at DATETIME NOT NULL
+);
+
+
+DROP PROCEDURE IF EXISTS add_procedure_log;
+
+CREATE PROCEDURE add_procedure_log(IN p_operation_name VARCHAR(150))
+INSERT INTO procedure_log(operation_name, created_at)
+VALUES (p_operation_name, NOW());
+
+CALL add_procedure_log('Environmental statistics calculation');
+
+SELECT *
+FROM procedure_log;
